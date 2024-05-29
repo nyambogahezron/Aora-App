@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "aora-app",
-    "slug": "aora-app",
+    "name": "Aora",
+    "slug": "aora",
+    "scheme": "aora",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
