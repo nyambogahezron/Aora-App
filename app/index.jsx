@@ -9,10 +9,10 @@ export default function HomeScreen() {
       <StatusBar style='auto' />
       <Link
         className='py-4 px-6 bg-slate-100 mt-4 rounded-md font-medium'
-        href='/Profile'
+        href='/home'
         style={{ color: 'blue' }}
       >
-        Go to Profile
+        Go to Home
       </Link>
     </View>
   );
