@@ -3,11 +3,10 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, ScrollView, Dimensions, Alert, Image } from 'react-native';
 import { images } from '../../constants';
-import CustomButton from '../../components/CustomButton';
-import FormField from '../../components/FormField';
-import AuthFormFooter from '../../components/AuthFormFooter';
 import { createUser } from '../../lib/appwrite';
+import { CustomButton, FormField } from '../../components';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import AuthFormFooter from '../../components/AuthFormFooter';
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();

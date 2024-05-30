@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Tabs, Redirect } from 'expo-router';
 import { Image, Text, View } from 'react-native';
 import { icons } from '../../constants';
+import { Loader } from '../../components';
 import { useGlobalContext } from '../../context/GlobalProvider';
 
 const TabIcon = ({ icon, color, name, focused }) => {
@@ -104,6 +105,7 @@ const TabLayout = () => {
           }}
         />
       </Tabs>
+      <Loader isLoading={loading} />
       <StatusBar backgroundColor='#161622' style='light' />
     </>
   );

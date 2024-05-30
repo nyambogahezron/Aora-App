@@ -15,14 +15,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "package": "com.native.aora"
+      "package": "com.jsm.aora"
     },
     "android": {
       "package": "com.native.aora",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jsm.aora"
     },
     "web": {
       "bundler": "metro",
