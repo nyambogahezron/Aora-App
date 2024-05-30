@@ -1,12 +1,16 @@
 import { View, Text, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { images } from '../constants';
 import CustomButton from '../components/CustomButton';
 import { StatusBar } from 'expo-status-bar';
-import { router } from 'expo-router';
+import { router, Redirect } from 'expo-router';
+import { useGlobalContext } from '../context/GlobalProvider';
 
 const Welcome = () => {
+  const { loading, isLogged } = useGlobalContext();
+
+  if (!loading && isLogged) return <Redirect href='/profile' />;
+
   return (
     <SafeAreaView className='bg-primary h-full'>
       <ScrollView
@@ -50,7 +54,9 @@ const Welcome = () => {
           </Text>
           <CustomButton
             title='Continue with email'
-            handlePress={() => {router.push('sign-in')}}
+            handlePress={() => {
+              router.push('sign-in');
+            }}
             containerStyles='w-full mt-7'
           />
         </View>
