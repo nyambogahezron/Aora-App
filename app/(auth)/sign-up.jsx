@@ -1,71 +1,94 @@
-import { useState } from "react";
-import { Link, router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-import { images } from "../../constants";
-import  CustomButton from "../../components/CustomButton";
-import  FormField  from "../../components/FormField";
-import AuthFormFooter from "../../components/AuthFormFooter";
+import { useState } from 'react';
+import { Link, router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Dimensions, Alert, Image } from 'react-native';
+import { images } from '../../constants';
+import CustomButton from '../../components/CustomButton';
+import FormField from '../../components/FormField';
+import AuthFormFooter from '../../components/AuthFormFooter';
+import { createUser } from '../../lib/appwrite';
 
 const SignUp = () => {
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: '',
+    email: '',
+    password: '',
   });
 
-  const submit = async () => {};
+  // sign -up the user and redirect to home page
+  const submit = async () => {
+    if (form.username === '' || form.email === '' || form.password === '') {
+      Alert.alert('Error', 'Please fill in all fields');
+    }
+
+    setSubmitting(true);
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+      setUser(result);
+      setIsLogged(true);
+
+      router.replace('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className='bg-primary h-full'>
       <ScrollView>
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className='w-full flex justify-center h-full px-4 my-6'
           style={{
-            minHeight: Dimensions.get("window").height - 100,
+            minHeight: Dimensions.get('window').height - 100,
           }}
         >
           <Image
             source={images.logo}
-            resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            resizeMode='contain'
+            className='w-[115px] h-[34px]'
           />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
             Sign Up to Aora
           </Text>
 
           <FormField
-            title="Username"
+            title='Username'
             value={form.username}
             handleChangeText={(e) => setForm({ ...form, username: e })}
-            otherStyles="mt-10"
+            otherStyles='mt-10'
           />
 
           <FormField
-            title="Email"
+            title='Email'
             value={form.email}
             handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7"
-            keyboardType="email-address"
+            otherStyles='mt-7'
+            keyboardType='email-address'
           />
 
           <FormField
-            title="Password"
+            title='Password'
             value={form.password}
             handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7"
+            otherStyles='mt-7'
           />
 
           <CustomButton
-            title="Sign Up"
+            title='Sign Up'
             handlePress={submit}
-            containerStyles="mt-7"
+            containerStyles='mt-7'
             isLoading={isSubmitting}
           />
 
-          <AuthFormFooter text='Have an account already?' linkText='Login' link='/sign-in'/>
+          <AuthFormFooter
+            text='Have an account already?'
+            linkText='Login'
+            link='/sign-in'
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
