@@ -3,19 +3,29 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { icons } from '../../constants';
 import useAppwrite from '../../lib/useAppwrite';
-import { getUserPosts, signOut } from '../../lib/appwrite';
-import { useGlobalContext } from '../../context/GlobalProvider';
+import { getUserPosts} from '../../lib/appwrite';
+import { useUser, logout } from '../../context/UseContextProvider';
+
 import { EmptyState, InfoBox, VideoCard } from '../../components';
+import { useEffect, useState } from 'react';
 
 const Profile = () => {
-  const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
+  const user = useUser();
+  const [posts, setPosts] = useState(null);
 
-  const logout = async () => {
-    await signOut();
-    setUser(null);
-    setIsLogged(false);
+ useEffect(() => {
+   if (user && user.$id) {
+     const fetchPosts = async () => {
+       const postsData = await getUserPosts(user.$id);
+       setPosts(postsData);
+     };
 
+     fetchPosts();
+   }
+ }, [user]);
+
+  const logoutUser = async () => {
+    await user.logout();
     router.replace('/sign-in');
   };
 
@@ -42,7 +52,7 @@ const Profile = () => {
         ListHeaderComponent={() => (
           <View className='w-full flex justify-center items-center mt-6 mb-12 px-4'>
             <TouchableOpacity
-              onPress={logout}
+              onPress={logoutUser}
               className='flex w-full items-end mb-10'
             >
               <Image
@@ -68,7 +78,7 @@ const Profile = () => {
 
             <View className='mt-5 flex flex-row'>
               <InfoBox
-                title={posts.length || 0}
+                title={posts?.length || 0}
                 subtitle='Posts'
                 titleStyles='text-xl'
                 containerStyles='mr-10'

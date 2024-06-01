@@ -2,29 +2,32 @@ import { Stack, Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { Loader } from '../../components';
+import { UserProvider } from '../../context/UseContextProvider';
+import { useUser } from '../../context/UseContextProvider';
 
 const AuthLayout = () => {
-  const { loading, isLogged } = useGlobalContext();
+  const user = useUser();
 
-  if (!loading && isLogged) return <Redirect href='/home' />;
+  if (user.current) return <Redirect href='/home' />;
   return (
     <>
-      <Stack>
-        <Stack.Screen
-          name='sign-in'
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name='sign-up'
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack>
-      <Loader isLoading={loading} />
-      <StatusBar backgroundColor='#161622' style='light' />
+      <UserProvider>
+        <Stack>
+          <Stack.Screen
+            name='sign-in'
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name='sign-up'
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack>
+        <StatusBar backgroundColor='#161622' style='light' />
+      </UserProvider>
     </>
   );
 };

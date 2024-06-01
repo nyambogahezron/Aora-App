@@ -1,8 +1,12 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useUser } from '../context/UseContextProvider';
 import { Stack, SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
-import GlobalProvider  from '../context/GlobalProvider';
-
+import Toast from 'react-native-toast-message';
+import GlobalProvider from '../context/GlobalProvider';
+import { UserProvider } from '../context/UseContextProvider';
 // Prevent the splash screen from auto hiding until the fonts are loaded
 SplashScreen.preventAutoHideAsync;
 
@@ -30,14 +34,15 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) return null;
 
   return (
-    <GlobalProvider>
-    <Stack>
-      <Stack.Screen name='index' options={{ headerShown: false }} />
-      <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-      <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-      <Stack.Screen name='search/[query]' options={{ headerShown: false }} />
-    </Stack>
-    </GlobalProvider>
+    <UserProvider>
+      <Stack>
+        <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+        <Stack.Screen name='search/[query]' options={{ headerShown: false }} />
+      </Stack>
+      <Toast />
+    </UserProvider>
   );
 };
 export default RootLayout;

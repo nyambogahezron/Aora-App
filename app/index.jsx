@@ -4,16 +4,15 @@ import { images } from '../constants';
 import { CustomButton, Loader } from '../components';
 import { StatusBar } from 'expo-status-bar';
 import { router, Redirect } from 'expo-router';
-import { useGlobalContext } from '../context/GlobalProvider';
+import { useUser } from '../context/UseContextProvider';
 
 const Welcome = () => {
-  const { loading, isLogged } = useGlobalContext();
+ const user = useUser();
 
-  if (!loading && isLogged) return <Redirect href='/profile' />;
+  if (user.current) return <Redirect href='/home' />;
 
   return (
     <SafeAreaView className='bg-primary h-full'>
-      <Loader isLoading={loading} />
 
       <ScrollView
         contentContainerStyle={{

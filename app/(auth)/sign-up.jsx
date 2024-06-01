@@ -20,7 +20,9 @@ const SignUp = () => {
   // sign -up the user and redirect to home page
   const submit = async () => {
     if (form.username === '' || form.email === '' || form.password === '') {
-      Alert.alert('Error', 'Please fill in all fields');
+      Alert.alert('Error', 'Please fill in all fields')
+
+      return;
     }
 
     setSubmitting(true);

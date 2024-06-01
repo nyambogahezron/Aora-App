@@ -1,16 +1,18 @@
-import { useState } from 'react';
-import { Link, router } from 'expo-router';
+import {  useState } from 'react';
+import Toast from 'react-native-toast-message';
+import {  Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, Dimensions, Alert, Image } from 'react-native';
+import { View, Text, ScrollView, Dimensions,  Image } from 'react-native';
 import { images } from '../../constants';
 import { CustomButton, FormField } from '../../components';
-import { getCurrentUser, signIn } from '../../lib/appwrite';
-import { useGlobalContext } from '../../context/GlobalProvider';
+import { useUser } from '../../context/UseContextProvider';
 import AuthFormFooter from '../../components/AuthFormFooter';
 
 const SignIn = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
-  const [isSubmitting, setSubmitting] = useState(false);
+  const user = useUser();
+
+  if (user) return <Redirect href='/home' />;
+
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -19,21 +21,18 @@ const SignIn = () => {
   // login the user and redirect to home page
   const submit = async () => {
     if (form.email === '' || form.password === '') {
-      Alert.alert('Error', 'Please fill in all fields');
-    }
-    setSubmitting(true);
-    try {
-      await signIn(form.email, form.password);
-      const result = await getCurrentUser();
-      setUser(result);
-      setIsLogged(true);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please fill in all fields!',
+      });
 
-      Alert.alert('Success', 'User signed in successfully');
-      router.replace('/home');
+      return;
+    }
+    try {
+      await user.login(form.email, form.password);
     } catch (error) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setSubmitting(false);
+      throw new Error(error);
     }
   };
 
@@ -75,7 +74,7 @@ const SignIn = () => {
             title='Sign In'
             handlePress={submit}
             containerStyles='mt-7'
-            isLoading={isSubmitting}
+            isLoading={user.isLoading}
           />
           <AuthFormFooter
             text="Don't have an account?"

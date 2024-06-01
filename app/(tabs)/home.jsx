@@ -1,22 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList, Image, RefreshControl, Text, View } from 'react-native';
-
+import { useUser } from '../../context/UseContextProvider';
 import { images } from '../../constants';
 import useAppwrite from '../../lib/useAppwrite';
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite';
 import { EmptyState, SearchInput, Trending, VideoCard } from '../../components';
 
 const Home = () => {
-  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const user = useUser();
+  // const { data: posts, refetch } = useAppwrite(getAllPosts);
   const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState(false);
+  const [posts, setPosts] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      const fetchPosts = async () => {
+        const postsData = await useAppwrite(getAllPosts);
+        setPosts(postsData);
+      };
+
+    }
+  }, [user,posts]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
-    // console.log(latestPosts);
+    await fetchPosts();
     setRefreshing(false);
   };
 
@@ -42,7 +53,7 @@ const Home = () => {
                   Welcome Back
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  JSMastery
+                  {user.current ? user.current.name : 'Please login'}
                 </Text>
               </View>
 
