@@ -34,15 +34,20 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) return null;
 
   return (
-    <UserProvider>
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-        <Stack.Screen name='search/[query]' options={{ headerShown: false }} />
-      </Stack>
-      <Toast />
-    </UserProvider>
+    <GlobalProvider>
+      <UserProvider>
+        <Stack>
+          <Stack.Screen name='index' options={{ headerShown: false }} />
+          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='search/[query]'
+            options={{ headerShown: false }}
+          />
+        </Stack>
+        <Toast />
+      </UserProvider>
+    </GlobalProvider>
   );
 };
 export default RootLayout;

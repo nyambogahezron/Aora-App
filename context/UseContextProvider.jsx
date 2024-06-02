@@ -54,9 +54,9 @@ export function UserProvider(props) {
   }
 
   async function register(username, email, password) {
-    await account.create(ID.unique(), email, password);
+    await account.create(ID.unique(), username, email, password);
     await login(email, password);
-    toast('Account created');
+    toast('Account created successful');
   }
 
   async function getCurrentUser() {
@@ -66,11 +66,13 @@ export function UserProvider(props) {
       toast('Welcome back. You are logged in');
     } catch (err) {
       setUser(null);
-        setLoading(false);
+      setLoading(false);
     }
   }
 
   useEffect(() => {
+    setIsLogged(false);
+
     getCurrentUser()
       .then((res) => {
         if (res) {

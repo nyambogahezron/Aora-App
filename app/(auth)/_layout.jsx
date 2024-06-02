@@ -6,9 +6,9 @@ import { UserProvider } from '../../context/UseContextProvider';
 import { useUser } from '../../context/UseContextProvider';
 
 const AuthLayout = () => {
-  const user = useUser();
+  // const user = useUser();
 
-  if (user.current) return <Redirect href='/home' />;
+  // if (user.current) return <Redirect href='/home' />;
   return (
     <>
       <UserProvider>

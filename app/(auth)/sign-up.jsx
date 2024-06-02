@@ -7,9 +7,19 @@ import { createUser } from '../../lib/appwrite';
 import { CustomButton, FormField } from '../../components';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import AuthFormFooter from '../../components/AuthFormFooter';
+import Toast from 'react-native-toast-message';
 
 const SignUp = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
+  const {
+    setIsLoggedIn,
+    isLoggedIn,
+    User,
+    setUser,
+    isLoading,
+    setIsLoading,
+    saveUserInfoLocally,
+  } = useGlobalContext();
+
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: '',
@@ -20,16 +30,27 @@ const SignUp = () => {
   // sign -up the user and redirect to home page
   const submit = async () => {
     if (form.username === '' || form.email === '' || form.password === '') {
-      Alert.alert('Error', 'Please fill in all fields')
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please fill in all fields!',
+      });
 
       return;
     }
+    const userInfo = await {
+      username: form.username,
+      id: 1234,
+      email: form.email,
+    };
 
     setSubmitting(true);
     try {
       const result = await createUser(form.email, form.password, form.username);
-      setUser(result);
-      setIsLogged(true);
+
+      console.log(result);
+      await saveUserInfoLocally(userInfo);
+      isLoggedIn(true);
 
       router.replace('/home');
     } catch (error) {

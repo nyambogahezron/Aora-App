@@ -7,9 +7,9 @@ import { router, Redirect } from 'expo-router';
 import { useUser } from '../context/UseContextProvider';
 
 const Welcome = () => {
- const user = useUser();
+//  const user = useUser();
 
-  if (user.current) return <Redirect href='/home' />;
+//   if (user.current) return <Redirect href='/home' />;
 
   return (
     <SafeAreaView className='bg-primary h-full'>

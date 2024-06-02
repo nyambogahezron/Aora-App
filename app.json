@@ -2,11 +2,10 @@
   "expo": {
     "name": "Aora",
     "slug": "aora",
-    "scheme": "aora",
+    "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -18,19 +17,21 @@
       "package": "com.jsm.aora"
     },
     "android": {
-      "package": "com.native.aora",
+      "package": "com.jsm.aora",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.jsm.aora"
+      }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font"]
-   
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store"
+    ]
   }
 }
