@@ -1,45 +1,23 @@
 import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Button,
-  FlatList,
-  Image,
-  RefreshControl,
-  Text,
-  View,
-} from 'react-native';
-import { useUser } from '../../context/UseContextProvider';
+import { FlatList, Image, RefreshControl, Text, View } from 'react-native';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import { images } from '../../constants';
 import useAppwrite from '../../lib/useAppwrite';
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite';
 import { EmptyState, SearchInput, Trending, VideoCard } from '../../components';
-import * as SecureStore from 'expo-secure-store';
 import { Redirect } from 'expo-router';
 
 const Home = () => {
-  useEffect(() => {
-    save('userInfo', userInfo);
-    getValueFor('userInfo');
-  }, [storedValue]);
-
-  const user = useUser();
+  const { isLoggedIn, User, isLoading, currentUser } = useGlobalContext();
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
   const { data: latestPosts } = useAppwrite(getLatestPosts);
-
   const [refreshing, setRefreshing] = useState(false);
-  const [posts, setPosts] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      const fetchPosts = async () => {
-        const postsData = useAppwrite(getAllPosts);
-        setPosts(postsData);
-      };
-    }
-  }, [user, posts]);
-
+  console.log('User is', currentUser);
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchPosts();
+    await refetch();
     setRefreshing(false);
   };
 
@@ -57,8 +35,8 @@ const Home = () => {
             title={item.title}
             thumbnail={item.thumbnail}
             video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
+            creator={item.users.username}
+            avatar={item.users.avatar}
           />
         )}
         ListHeaderComponent={() => (
@@ -69,16 +47,8 @@ const Home = () => {
                   Welcome Back
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  {user.current ? user.current.name : 'Please login'}
+                  {/* {isLoggedIn ? User.username : 'Please login'} */}
                 </Text>
-                <Button
-                  title='Save this key/value pair'
-                  onPress={() => {
-                    save(key, storedValue);
-                    onChangeValue(userInfo);
-                    getValueFor(key);
-                  }}
-                />
               </View>
 
               <View className='mt-1.5'>

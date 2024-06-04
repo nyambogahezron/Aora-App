@@ -3,29 +3,47 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { icons } from '../../constants';
 import useAppwrite from '../../lib/useAppwrite';
-import { getUserPosts} from '../../lib/appwrite';
+import { getUserPosts, signOut } from '../../lib/appwrite';
 import { useUser, logout } from '../../context/UseContextProvider';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 import { EmptyState, InfoBox, VideoCard } from '../../components';
 import { useEffect, useState } from 'react';
 
 const Profile = () => {
-  const user = useUser();
   const [posts, setPosts] = useState(null);
+  const {
+    setIsLoggedIn,
+    isLoggedIn,
+    User,
+    setUser,
+    isLoading,
+    setIsLoading,
+    saveUserInfoLocally,
+    getLoggedUser,
+    setCurrentUser,
+  } = useGlobalContext();
 
- useEffect(() => {
-   if (user && user.$id) {
-     const fetchPosts = async () => {
-       const postsData = await getUserPosts(user.$id);
-       setPosts(postsData);
-     };
+  
 
-     fetchPosts();
-   }
- }, [user]);
+  // useEffect(() => {
+  //   if (User) {
+  //     console.log(User);
+  //     const fetchPosts = async () => {
+  //       const postsData = await getUserPosts(User.$id);
+  //       setPosts(postsData);
+  //     };
+
+  //     fetchPosts();
+  //   }
+  // }, [user]);
 
   const logoutUser = async () => {
-    await user.logout();
+    await signOut();
+    setCurrentUser(null);
+    await setUser(null);
+    setIsLoggedIn(false);
+    saveUserInfoLocally(null);
     router.replace('/sign-in');
   };
 
@@ -64,14 +82,14 @@ const Profile = () => {
 
             <View className='w-16 h-16 border border-secondary rounded-lg flex justify-center items-center'>
               <Image
-                source={{ uri: user?.avatar }}
+                source={{ uri: User?.avatar }}
                 className='w-[90%] h-[90%] rounded-lg'
                 resizeMode='cover'
               />
             </View>
 
             <InfoBox
-              title={user?.username}
+              title={User?.username}
               containerStyles='mt-5'
               titleStyles='text-lg'
             />

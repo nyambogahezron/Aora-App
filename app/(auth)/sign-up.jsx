@@ -5,21 +5,11 @@ import { View, Text, ScrollView, Dimensions, Alert, Image } from 'react-native';
 import { images } from '../../constants';
 import { createUser } from '../../lib/appwrite';
 import { CustomButton, FormField } from '../../components';
-import { useGlobalContext } from '../../context/GlobalProvider';
 import AuthFormFooter from '../../components/AuthFormFooter';
 import Toast from 'react-native-toast-message';
+import { toast } from '../../lib/toast';
 
 const SignUp = () => {
-  const {
-    setIsLoggedIn,
-    isLoggedIn,
-    User,
-    setUser,
-    isLoading,
-    setIsLoading,
-    saveUserInfoLocally,
-  } = useGlobalContext();
-
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: '',
@@ -38,21 +28,13 @@ const SignUp = () => {
 
       return;
     }
-    const userInfo = await {
-      username: form.username,
-      id: 1234,
-      email: form.email,
-    };
 
     setSubmitting(true);
     try {
       const result = await createUser(form.email, form.password, form.username);
-
-      console.log(result);
-      await saveUserInfoLocally(userInfo);
-      isLoggedIn(true);
-
-      router.replace('/home');
+      toast('Account created successful, please login');
+      if (result) return router.replace('/sign-in');
+      
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {

@@ -1,18 +1,17 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import {  Redirect } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, Dimensions,  Image } from 'react-native';
+import { View, Text, ScrollView, Dimensions, Image } from 'react-native';
 import { images } from '../../constants';
 import { CustomButton, FormField } from '../../components';
-import { useUser } from '../../context/UseContextProvider';
 import AuthFormFooter from '../../components/AuthFormFooter';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { signIn } from '../../lib/appwrite';
+import { toast } from '../../lib/toast';
 
 const SignIn = () => {
-  const user = useUser();
-
-  if (user) return <Redirect href='/home' />;
-
+  const { setCurrentUser, isLoading, setIsLoggedIn } = useGlobalContext();
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -30,7 +29,13 @@ const SignIn = () => {
       return;
     }
     try {
-      await user.login(form.email, form.password);
+      const user = await signIn(form.email, form.password);
+      await setCurrentUser(user);
+      setIsLoggedIn(true)
+
+      toast('Login successful');
+
+      if (user) return router.replace('/home');
     } catch (error) {
       throw new Error(error);
     }
@@ -74,7 +79,7 @@ const SignIn = () => {
             title='Sign In'
             handlePress={submit}
             containerStyles='mt-7'
-            isLoading={user.isLoading}
+            isLoading={isLoading}
           />
           <AuthFormFooter
             text="Don't have an account?"

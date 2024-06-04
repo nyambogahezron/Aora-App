@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import { icons } from "../constants";
 
-const VideoCard = ({ title, creator, avator, thumbnail, video }) => {
+const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -13,7 +13,7 @@ const VideoCard = ({ title, creator, avator, thumbnail, video }) => {
         <View className='flex justify-center items-center flex-row flex-1'>
           <View className='w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5'>
             <Image
-              source={{ uri: avator }}
+              source={{ uri: avatar }}
               className='w-full h-full rounded-lg'
               resizeMode='cover'
             />

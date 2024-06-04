@@ -4,12 +4,8 @@ import { images } from '../constants';
 import { CustomButton, Loader } from '../components';
 import { StatusBar } from 'expo-status-bar';
 import { router, Redirect } from 'expo-router';
-import { useUser } from '../context/UseContextProvider';
 
 const Welcome = () => {
-//  const user = useUser();
-
-//   if (user.current) return <Redirect href='/home' />;
 
   return (
     <SafeAreaView className='bg-primary h-full'>
