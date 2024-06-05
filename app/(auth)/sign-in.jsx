@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, ScrollView, Dimensions, Image } from 'react-native';
 import { images } from '../../constants';
@@ -11,7 +11,8 @@ import { signIn } from '../../lib/appwrite';
 import { toast } from '../../lib/toast';
 
 const SignIn = () => {
-  const { setCurrentUser, isLoading, setIsLoggedIn } = useGlobalContext();
+  const { User, setUser, isLoading, setIsLoggedIn, setIsLoading } =
+    useGlobalContext();
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -29,15 +30,20 @@ const SignIn = () => {
       return;
     }
     try {
+      setIsLoading(true);
       const user = await signIn(form.email, form.password);
-      await setCurrentUser(user);
-      setIsLoggedIn(true)
+      await setUser(user);
+      setIsLoading(false);
+      setIsLoggedIn(true);
 
       toast('Login successful');
 
       if (user) return router.replace('/home');
     } catch (error) {
+      alert(error.message);
       throw new Error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

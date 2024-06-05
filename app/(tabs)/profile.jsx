@@ -1,56 +1,36 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { icons } from '../../constants';
 import useAppwrite from '../../lib/useAppwrite';
 import { getUserPosts, signOut } from '../../lib/appwrite';
-import { useUser, logout } from '../../context/UseContextProvider';
 import { useGlobalContext } from '../../context/GlobalProvider';
-
 import { EmptyState, InfoBox, VideoCard } from '../../components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Profile = () => {
-  const [posts, setPosts] = useState(null);
-  const {
-    setIsLoggedIn,
-    isLoggedIn,
-    User,
-    setUser,
-    isLoading,
-    setIsLoading,
-    saveUserInfoLocally,
-    getLoggedUser,
-    setCurrentUser,
-  } = useGlobalContext();
+  const { setIsLoggedIn, User, setUser } = useGlobalContext();
+  const [userId, setUseId] = useState(null)
 
-  
 
-  // useEffect(() => {
-  //   if (User) {
-  //     console.log(User);
-  //     const fetchPosts = async () => {
-  //       const postsData = await getUserPosts(User.$id);
-  //       setPosts(postsData);
-  //     };
+  if (!userId) {
+    setUseId(User.$id)
+    console.log('userId', userId)
+  }
 
-  //     fetchPosts();
-  //   }
-  // }, [user]);
+  const { data: posts } = useAppwrite(() => getUserPosts(userId));
 
   const logoutUser = async () => {
     await signOut();
-    setCurrentUser(null);
     await setUser(null);
     setIsLoggedIn(false);
-    saveUserInfoLocally(null);
-    router.replace('/sign-in');
+    return <Redirect to='/sign-in' />;
   };
 
   return (
     <SafeAreaView className='bg-primary h-full'>
       <FlatList
-        data={posts}
+        data={posts ?? []}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <VideoCard
@@ -89,7 +69,7 @@ const Profile = () => {
             </View>
 
             <InfoBox
-              title={User?.username}
+              title={User?.name}
               containerStyles='mt-5'
               titleStyles='text-lg'
             />

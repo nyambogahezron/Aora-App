@@ -2,7 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Tabs, Redirect } from 'expo-router';
 import { Image, Text, View } from 'react-native';
 import { icons } from '../../constants';
-import { useUser } from '../../context/UseContextProvider';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { Loader } from '../../components';
 
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
@@ -24,8 +25,9 @@ const TabIcon = ({ icon, color, name, focused }) => {
 };
 
 const TabLayout = () => {
-  // const user = useUser();
-  // if (!user) return <Redirect href='/sign-in' />;
+  const { User, isLoading } = useGlobalContext();
+
+  if (!User) return <Redirect href='/sign-in' />;
 
   return (
     <>
@@ -104,6 +106,7 @@ const TabLayout = () => {
           }}
         />
       </Tabs>
+      <Loader isLoading={isLoading} />
       <StatusBar backgroundColor='#161622' style='light' />
     </>
   );

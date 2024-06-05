@@ -9,12 +9,11 @@ import { EmptyState, SearchInput, Trending, VideoCard } from '../../components';
 import { Redirect } from 'expo-router';
 
 const Home = () => {
-  const { isLoggedIn, User, isLoading, currentUser } = useGlobalContext();
+  const { isLoggedIn, User, isLoading } = useGlobalContext();
   const { data: posts, refetch } = useAppwrite(getAllPosts);
   const { data: latestPosts } = useAppwrite(getLatestPosts);
   const [refreshing, setRefreshing] = useState(false);
 
-  console.log('User is', currentUser);
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -47,7 +46,7 @@ const Home = () => {
                   Welcome Back
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  {/* {isLoggedIn ? User.username : 'Please login'} */}
+                  {isLoggedIn ? User.name : 'Please login'}
                 </Text>
               </View>
 
