@@ -19,33 +19,37 @@ const SignIn = () => {
   });
 
   // login the user and redirect to home page
-  const submit = async () => {
-    if (form.email === '' || form.password === '') {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please fill in all fields!',
-      });
+ const submit = async () => {
+   if (form.email === '' || form.password === '') {
+     Toast.show({
+       type: 'error',
+       text1: 'Error',
+       text2: 'Please fill in all fields!',
+     });
 
-      return;
-    }
-    try {
-      setIsLoading(true);
-      const user = await signIn(form.email, form.password);
-      await setUser(user);
-      setIsLoading(false);
-      setIsLoggedIn(true);
+     return;
+   }
 
-      toast('Login successful');
+   try {
+     setIsLoading(true);
+     const user = await signIn(form.email, form.password);
+     await setUser(user);
+     setIsLoading(false);
+     setIsLoggedIn(true);
 
-      if (user) return router.replace('/home');
-    } catch (error) {
-      alert(error.message);
-      throw new Error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+     toast('Login successful');
+
+     if (user) return router.replace('/home');
+   } catch (error) {
+     if (error instanceof Error) {
+       alert(error.message);
+     } else {
+       alert('An unknown error occurred');
+     }
+   } finally {
+     setIsLoading(false);
+   }
+ };
 
   return (
     <SafeAreaView className='bg-primary h-full'>

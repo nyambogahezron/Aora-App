@@ -35,7 +35,11 @@ const SignUp = () => {
       toast('Account created successful, please login');
       if (result) return router.replace('/sign-in');
     } catch (error) {
-      Alert.alert('Error', error.message);
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('An unknown error occurred');
+      }
     } finally {
       setSubmitting(false);
     }

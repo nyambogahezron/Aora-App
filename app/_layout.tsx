@@ -2,7 +2,7 @@ import { Stack, SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import GlobalProvider from '../context/GlobalProvider';
+import { GlobalProvider } from '../context/GlobalProvider';
 
 // Prevent the splash screen from auto hiding until the fonts are loaded
 SplashScreen.preventAutoHideAsync;

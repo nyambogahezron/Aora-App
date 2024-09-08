@@ -1,4 +1,11 @@
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+type CustomButtonProps = {
+  title: string;
+  handlePress: () => void;
+  containerStyles: string;
+  textStyles?: CssProps;
+  isLoading?: boolean;
+};
 
 const CustomButton = ({
   title,
@@ -6,7 +13,7 @@ const CustomButton = ({
   containerStyles,
   textStyles,
   isLoading,
-}) => {
+}: CustomButtonProps) => {
   return (
     <TouchableOpacity
       onPress={handlePress}

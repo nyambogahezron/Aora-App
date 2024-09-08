@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { ResizeMode, Video } from 'expo-av';
 import * as DocumentPicker from 'expo-document-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,17 +17,26 @@ import { createVideoPost } from '../../lib/appwrite';
 import { CustomButton, FormField } from '../../components';
 import { useGlobalContext } from '../../context/GlobalProvider';
 
-const Create = () => {
+interface FormState {
+  title: string;
+  video: DocumentPicker.DocumentPickerSuccessResult | null;
+  thumbnail: DocumentPicker.DocumentPickerSuccessResult | null;
+  prompt: string;
+}
+
+const Create: React.FC = () => {
   const { User } = useGlobalContext();
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     title: '',
     video: null,
     thumbnail: null,
     prompt: '',
   });
 
-  const openPicker = async (selectType) => {
+  const router = useRouter();
+
+  const openPicker = async (selectType: 'image' | 'video') => {
     const result = await DocumentPicker.getDocumentAsync({
       type:
         selectType === 'image'
@@ -39,14 +48,14 @@ const Create = () => {
       if (selectType === 'image') {
         setForm({
           ...form,
-          thumbnail: result.assets[0],
+          thumbnail: result,
         });
       }
 
       if (selectType === 'video') {
         setForm({
           ...form,
-          video: result.assets[0],
+          video: result,
         });
       }
     } else {
@@ -58,9 +67,9 @@ const Create = () => {
 
   const submit = async () => {
     if (
-      (form.prompt === '') |
-      (form.title === '') |
-      !form.thumbnail |
+      form.prompt === '' ||
+      form.title === '' ||
+      !form.thumbnail ||
       !form.video
     ) {
       return Alert.alert('Please provide all fields');
@@ -75,7 +84,7 @@ const Create = () => {
 
       Alert.alert('Success', 'Post uploaded successfully');
       router.push('/home');
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert('Error', error.message);
     } finally {
       setForm({
@@ -98,7 +107,7 @@ const Create = () => {
           title='Video Title'
           value={form.title}
           placeholder='Give your video a catchy title...'
-          handleChangeText={(e) => setForm({ ...form, title: e })}
+          handleChangeText={(e: string) => setForm({ ...form, title: e })}
           otherStyles='mt-10'
         />
 
@@ -163,7 +172,7 @@ const Create = () => {
           title='AI Prompt'
           value={form.prompt}
           placeholder='The AI prompt of your video....'
-          handleChangeText={(e) => setForm({ ...form, prompt: e })}
+          handleChangeText={(e: string) => setForm({ ...form, prompt: e })}
           otherStyles='mt-7'
         />
 

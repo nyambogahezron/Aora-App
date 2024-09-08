@@ -1,17 +1,18 @@
-import { Redirect, router } from 'expo-router';
+import React from 'react';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { icons } from '../../constants';
 import useAppwrite from '../../lib/useAppwrite';
 import { getUserPosts, signOut } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
-
 import { EmptyState, InfoBox, VideoCard } from '../../components';
-import { useEffect, useState } from 'react';
+import { PostProps } from '@/Types';
 
 const Bookmark = () => {
-  const { setIsLoggedIn, User, setUser, isLoading, setIsLoading } =
-    useGlobalContext();
+  const { setIsLoggedIn, User, setUser } = useGlobalContext();
+
+  const router = useRouter();
 
   const { data: posts } = useAppwrite(() => getUserPosts(User.$id));
 
@@ -19,12 +20,12 @@ const Bookmark = () => {
     await signOut();
     await setUser(null);
     setIsLoggedIn(false);
-    return <Redirect to='/sign-in' />;
+    router.push('/sign-in');
   };
 
   return (
     <SafeAreaView className='bg-primary h-full'>
-      <FlatList
+      <FlatList<PostProps>
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => {
@@ -74,7 +75,7 @@ const Bookmark = () => {
 
             <View className='mt-5 flex flex-row'>
               <InfoBox
-                title={posts?.length || 0}
+                title={posts?.length.toString() || '0'}
                 subtitle='Posts'
                 titleStyles='text-xl'
                 containerStyles='mr-10'

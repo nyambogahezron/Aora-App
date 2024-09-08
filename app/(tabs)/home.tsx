@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList, Image, RefreshControl, Text, View } from 'react-native';
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -7,6 +7,16 @@ import useAppwrite from '../../lib/useAppwrite';
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite';
 import { EmptyState, SearchInput, Trending, VideoCard } from '../../components';
 import { Redirect } from 'expo-router';
+type PostProps = {
+  $id: string;
+  title: string;
+  thumbnail: string;
+  video: string;
+  users: {
+    username: string;
+    avatar: string;
+  };
+};
 
 const Home = () => {
   const { isLoggedIn, User, isLoading } = useGlobalContext();
@@ -26,7 +36,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className='bg-primary'>
-      <FlatList
+      <FlatList<PostProps>
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
@@ -59,7 +69,7 @@ const Home = () => {
               </View>
             </View>
 
-            <SearchInput />
+            <SearchInput placeholder='Search...' />
 
             <View className='w-full flex-1 pt-5 pb-8'>
               <Text className='text-lg font-pregular text-gray-100 mb-3'>

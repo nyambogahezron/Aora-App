@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 import { View, Text, TouchableOpacity, Image } from "react-native";
-
 import { icons } from "../constants";
 
-const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
+type VideoCardProps = {
+  title: string;
+  creator: string;
+  avatar: string;
+  thumbnail: string;
+  video: string;
+}
+const VideoCard = ({
+  title,
+  creator,
+  avatar,
+  thumbnail,
+  video,
+}: VideoCardProps) => {
   const [play, setPlay] = useState(false);
 
   return (

@@ -1,31 +1,41 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
 import { account } from '../lib/appWriteConfig';
 
-const GlobalContext = createContext();
-export const useGlobalContext = () => useContext(GlobalContext);
+type ContextProps = {
+  isLoading?: boolean;
+  isLoggedIn?: boolean;
+  setIsLoggedIn?: React.Dispatch<React.SetStateAction<boolean>>;
+  User?: any;
+  setUser?: React.Dispatch<React.SetStateAction<any>>;
+  setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  children?: ReactNode;
+};
 
-const GlobalProvider = ({ children }) => {
+const GlobalContext = createContext<any>(null);
+
+export const GlobalProvider = ({ children }: ContextProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [User, setUser] = useState(null);
+  const [User, setUser] = useState<any>(null);
 
   async function getLoggedUser() {
     setIsLoading(true);
-    let user = {};
     try {
       const loggedInUser = await account.get();
-      // console.log('loggedInUser', loggedInUser);
       setUser(loggedInUser);
-      setIsLoading(false);
       setIsLoggedIn(true);
     } catch (error) {
-      setIsLoading(false);
       setIsLoggedIn(false);
       setUser(null);
     } finally {
       setIsLoading(false);
     }
-    return user;
   }
 
   useEffect(() => {
@@ -35,11 +45,11 @@ const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        setIsLoggedIn,
+        isLoading,
         isLoggedIn,
+        setIsLoggedIn,
         User,
         setUser,
-        isLoading,
         setIsLoading,
       }}
     >
@@ -48,4 +58,4 @@ const GlobalProvider = ({ children }) => {
   );
 };
 
-export default GlobalProvider;
+export const useGlobalContext = () => useContext(GlobalContext);

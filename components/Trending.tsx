@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ResizeMode, Video } from 'expo-av';
 import * as Animatable from 'react-native-animatable';
 import {
@@ -6,6 +6,8 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  ViewToken,
+  ViewabilityConfig,
 } from 'react-native';
 
 import { icons } from '../constants';
@@ -28,7 +30,18 @@ const zoomOut = {
   },
 };
 
-const TrendingItem = ({ activeItem, item }) => {
+interface Post {
+  $id: string;
+  video: string;
+  thumbnail: string;
+}
+
+interface TrendingItemProps {
+  activeItem: string;
+  item: Post;
+}
+
+const TrendingItem: React.FC<TrendingItemProps> = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -75,13 +88,25 @@ const TrendingItem = ({ activeItem, item }) => {
   );
 };
 
-const Trending = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[0]);
+interface TrendingProps {
+  posts: Post[];
+}
 
-  const viewableItemsChanged = ({ viewableItems }) => {
+const Trending: React.FC<TrendingProps> = ({ posts }) => {
+  const [activeItem, setActiveItem] = useState(posts[0].$id);
+
+  const viewableItemsChanged = ({
+    viewableItems,
+  }: {
+    viewableItems: ViewToken[];
+  }) => {
     if (viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].key);
+      setActiveItem(viewableItems[0].key as string);
     }
+  };
+
+  const viewabilityConfig: ViewabilityConfig = {
+    itemVisiblePercentThreshold: 70,
   };
 
   return (
@@ -93,9 +118,7 @@ const Trending = ({ posts }) => {
         <TrendingItem activeItem={activeItem} item={item} />
       )}
       onViewableItemsChanged={viewableItemsChanged}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 70,
-      }}
+      viewabilityConfig={viewabilityConfig}
       contentOffset={{ x: 170 }}
     />
   );
