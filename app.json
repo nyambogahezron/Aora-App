@@ -31,7 +31,19 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "permission": "Allow $(PRODUCT_NAME) to access your files."
+        }
+      ]
     ],
     "extra": {
       "router": {
