@@ -41,7 +41,7 @@ interface TrendingItemProps {
   item: Post;
 }
 
-const TrendingItem: React.FC<TrendingItemProps> = ({ activeItem, item }) => {
+const TrendingItem = ({ activeItem, item }: TrendingItemProps) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -58,7 +58,7 @@ const TrendingItem: React.FC<TrendingItemProps> = ({ activeItem, item }) => {
           useNativeControls
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
+            if (status.isLoaded && !status.isPlaying) {
               setPlay(false);
             }
           }}
@@ -88,12 +88,8 @@ const TrendingItem: React.FC<TrendingItemProps> = ({ activeItem, item }) => {
   );
 };
 
-interface TrendingProps {
-  posts: Post[];
-}
-
-const Trending: React.FC<TrendingProps> = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[0].$id);
+const Trending = ({ posts }: { posts: any }) => {
+  const [activeItem, setActiveItem] = useState(posts[0]?.$id || null);
 
   const viewableItemsChanged = ({
     viewableItems,
@@ -110,17 +106,22 @@ const Trending: React.FC<TrendingProps> = ({ posts }) => {
   };
 
   return (
-    <FlatList
-      data={posts}
-      horizontal
-      keyExtractor={(item) => item.$id}
-      renderItem={({ item }) => (
-        <TrendingItem activeItem={activeItem} item={item} />
+    <>
+      {activeItem && (
+        <FlatList
+          data={posts}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.$id}
+          renderItem={({ item }) => (
+            <TrendingItem activeItem={activeItem} item={item} />
+          )}
+          onViewableItemsChanged={viewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          contentOffset={{ x: 170, y: 0 }}
+        />
       )}
-      onViewableItemsChanged={viewableItemsChanged}
-      viewabilityConfig={viewabilityConfig}
-      contentOffset={{ x: 170 }}
-    />
+    </>
   );
 };
 

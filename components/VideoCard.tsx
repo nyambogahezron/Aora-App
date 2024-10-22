@@ -1,15 +1,10 @@
-import { useState } from "react";
-import { ResizeMode, Video } from "expo-av";
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import { icons } from "../constants";
+import { useEffect, useState } from 'react';
+import { ResizeMode, Video } from 'expo-av';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { icons } from '../constants';
+import { VideoCardProps } from '@/types';
+const fallbackThumbnail = 'https://images.squarespace-cdn.com/content/v1/5e7a2a22a7c9d26de743e580/4d7eb69a-4702-466b-b3c8-2e26c5d09cb5/MOW_WebHeader_FrozenLake+%28placeholder%29.png';
 
-type VideoCardProps = {
-  title: string;
-  creator: string;
-  avatar: string;
-  thumbnail: string;
-  video: string;
-}
 const VideoCard = ({
   title,
   creator,
@@ -18,6 +13,13 @@ const VideoCard = ({
   video,
 }: VideoCardProps) => {
   const [play, setPlay] = useState(false);
+  const [status, setStatus] = useState<any>({});
+
+  useEffect(() => {
+    if (status.didJustFinish) {
+      setPlay(false);
+    }
+  }, [status]);
 
   return (
     <View className='flex flex-col items-center px-4 mb-14'>
@@ -54,15 +56,15 @@ const VideoCard = ({
 
       {play ? (
         <Video
-          source={{ uri: video }}
+          source={{
+            uri: video,
+          }}
           className='w-full h-60 rounded-xl mt-3'
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
+            setStatus(() => status);
           }}
         />
       ) : (
@@ -72,7 +74,7 @@ const VideoCard = ({
           className='w-full h-60 rounded-xl mt-3 relative flex justify-center items-center'
         >
           <Image
-            source={{ uri: thumbnail }}
+            source={{ uri: thumbnail || fallbackThumbnail}}
             className='w-full h-full rounded-xl mt-3'
             resizeMode='cover'
           />

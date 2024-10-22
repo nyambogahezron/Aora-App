@@ -34,7 +34,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       style={otherStyles}
     >
       <TextInput
-        className='text-base mt-0.5 text-white flex-1 font-pregular'
+        className='text-start items-center text-white flex-1 font-pregular'
         value={value}
         placeholder={placeholder}
         placeholderTextColor='#CDCDE0'
@@ -43,7 +43,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       />
 
       <TouchableOpacity>
-        <Image source={icons.search} className='w-5 h-5' resizeMode='contain' />
+        <Image source={icons.search} className='item-center mt-4 w-5 h-5' resizeMode='contain' />
       </TouchableOpacity>
     </View>
   );

@@ -7,16 +7,7 @@ import useAppwrite from '../../lib/useAppwrite';
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite';
 import { EmptyState, SearchInput, Trending, VideoCard } from '../../components';
 import { Redirect } from 'expo-router';
-type PostProps = {
-  $id: string;
-  title: string;
-  thumbnail: string;
-  video: string;
-  users: {
-    username: string;
-    avatar: string;
-  };
-};
+import { VideoCardProps } from '@/types';
 
 const Home = () => {
   const { isLoggedIn, User, isLoading } = useGlobalContext();
@@ -36,7 +27,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className='bg-primary'>
-      <FlatList<PostProps>
+      <FlatList<VideoCardProps>
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
@@ -75,7 +66,7 @@ const Home = () => {
               <Text className='text-lg font-pregular text-gray-100 mb-3'>
                 Latest Videos
               </Text>
-
+              {/* trending posts */}
               <Trending posts={latestPosts ?? []} />
             </View>
           </View>

@@ -11,7 +11,7 @@ import { signIn } from '../../lib/appwrite';
 import { toast } from '../../lib/toast';
 
 const SignIn = () => {
-  const { User, setUser, isLoading, setIsLoggedIn, setIsLoading } =
+  const {  setUser, isLoading, setIsLoggedIn, setIsLoading } =
     useGlobalContext();
   const [form, setForm] = useState({
     email: '',
